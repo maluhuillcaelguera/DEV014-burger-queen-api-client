@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate  } from 'react-router-dom';
 import styles from '../Style/Login.module.css';
 import { login } from '../Servicios/authService';
 
@@ -6,15 +7,27 @@ const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate  = useNavigate ();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
       const response = await login(email, password);
       console.log('Login successful:', response);
-      // Aquí puedes manejar el éxito del login, como redirigir al usuario o guardar el token
-    } catch (error) {
-      setError('Credenciales inválidas. Inténtalo de nuevo.');
+      localStorage.setItem("token", response.accessToken);
+      // Redirigir según el rol del usuario
+      if (response.user.role === 'waiter') {
+        navigate('/waiter');
+      } else if (response.user.role === 'chef') {
+        navigate('/chef');
+      }
+      
+    } catch (error: any) {
+      if (error.response && error.response.status === 404) {
+        setError('URL no encontrada. Por favor, verifica la URL del API.');
+      } else {
+        setError('Credenciales inválidas. Inténtalo de nuevo.');
+      }
     }
   };
 
