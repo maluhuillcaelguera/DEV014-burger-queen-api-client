@@ -1,14 +1,21 @@
-
+// App.tsx
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
 import LoginPage from './Componentes/Login';
-import './App.css';
+import Waiter from './Componentes/Waiter';
+import ChefPage from './Componentes/Chef';
+import styles from './App.module.css'; // Importa el archivo de estilos
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <LoginPage />
+    <div className={styles.appContainer}>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/waiter" element={<Waiter />} />
+        <Route path="/chef" element={<ChefPage />} />
+      </Routes>
     </div>
   );
-}
+};
 
 export default App;
-
